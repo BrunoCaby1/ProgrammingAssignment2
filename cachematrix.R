@@ -24,7 +24,7 @@ makeCacheMatrix <- function(x = matrix()) {
   setinv<- function(solvedinv) inv<<-solvedinv
   
   ## Get the value of the inversed matrix
-  getinv<- function() m
+  getinv<- function() inv
   
   list(set = set, get = get,
        setinv = setinv,
@@ -44,13 +44,20 @@ cacheSolve <- function(x, ...) {
     message("getting cached data")
     ##break out of the function and return the cached inverse matrix
     return(inv)
-  }
+    }
   ##if the result of the getinv() function was NULL, then calculate the inverse by using the solve() function and putting the result in cache
   data <- x$get()
   ##calculate the inverse matrix
   inv <- solve(data)
   ##put the calculated inverse matrix in cache
-  x$setmean(inv)
+  x$setinv(inv)
   ##return the calculated inverse
-  m
+  inv
 }
+
+## Unit tests:
+ x <- rbind(c(1, -1/4), c(-1/4, 1)) 
+ m<-makeCacheMatrix(x) 
+ m$get()
+ x<-cacheSolve(m)
+ x
